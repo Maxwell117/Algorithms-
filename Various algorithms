@@ -1,0 +1,369 @@
+			Name : Caesar Cipher 
+
+#include <string>
+#include <cctype>
+#include <iostream>
+using namespace std;
+
+char shiftChar(char ss,int nn) //shifting all letters 
+{
+      char newc;
+      int a = int(ss);  //a is ascii value of given text 
+      
+      if (a <= 90 && a >= 65) {
+            if((a+nn) > 90)  //
+            { 
+                  int rem = (a+nn) % 90;
+                  a = 65 + rem-1;   
+            } else {
+                  a = a+nn;
+            }
+      } else if (a >= 97 && a <= 122) {
+            if((a+nn) > 122)  //
+            { 
+                  int rem = (a+nn) % 122;
+                  a = 97 + rem - 1;   
+            } else {
+                  a = a+nn;
+            }
+      }
+
+   newc = char(a);
+
+   return newc;
+}
+
+   string encryptCaesar(string plaintext,int rshift)
+   {
+      string newstr="";
+      for(int i=0;i<plaintext.length();i++)
+      {
+         char c=plaintext.at(i);
+
+         if(isalpha(c))  //shifts if a letter 
+         { 
+            c = shiftChar(c,rshift);
+            newstr+=c;
+         }
+         else
+            newstr+=c;
+         }
+      
+      return newstr;
+   }
+
+
+
+
+
+
+
+
+
+
+			Name : Subsequence 
+
+//Maxwell Large 
+#include <iostream>
+#include <string>
+#include <cmath>
+//#include <set>
+
+using namespace std;
+//int max(int a, int b)
+//{
+//	return (a > b)? a : b;
+//}
+
+
+// Printout Completed LCS Table ((debug visualization)
+	//intRetVal = LCSTable[m][n];
+
+	/*
+	//print columns (Y):
+	cout << "    ";
+	for (j = 0; j <= n; j++)
+   {
+      cout << Y[j] << " ";
+   }
+   cout << endl;
+
+   //print out table LCSTable
+   cout << "  ";
+   for (i = 0; i <= m; i++)
+	{
+		for (j = 0; j <= n; j++)
+		{
+         cout << LCSTable[i][j] << " ";
+		}
+		cout << endl;
+
+		//print rows (X):
+	   cout << X[i] << " ";
+
+	}
+   cout << endl;
+   */
+
+	//return intRetVal;
+//}
+int subsequence_driver(int argc, char **argv)
+{
+    string A=argv[1];//read in data
+    string B=argv[2];
+    
+    int a=A.length();
+    int b=B.length();
+
+    int L[a+1][b+1];
+    for(int i=0;i<=a;i++) //O(n^2)
+    {
+        for(int j=0;j<=b;j++)
+        {
+            if(i==0||j==0)
+            L[i][j] = 0;  //0 
+            else if(A[i-1]==B[j-1])
+            L[i][j]=L[i-1][j-1]+1;//get element A&B have in common
+            else
+            {
+            //L[i][j]=max(L[i-1][j],L[i][j-1]);
+            if(L[i-1][j]>L[i][j-1])
+               L[i][j]=L[i-1][j];
+            else
+               L[i][j]=L[i][j-1];
+            }
+        }
+    }
+    //////////////////////////////////////////////////////////////
+    
+    int sub_sequence=L[a][b];//size of both lengths
+    char sub[sub_sequence+1];
+    sub[sub_sequence]='\0';//last element is null
+    
+    while(a>0&&b>0)//until length!=0
+    {
+      if(A[a-1]==B[b-1])
+      {
+      sub[sub_sequence-1]=A[a-1];//decrement both and substr A
+      sub_sequence--;
+      a--;
+      b--;
+      }
+      else if(L[a-1][b]>L[a][b-1])
+      {
+      a--;//decrement A length
+      }
+      else
+      {
+      b--;//decrement B length
+      }
+    }
+    cout<<L[A.length()][B.length()]<<endl;//length
+    cout<<sub<<endl;//substring
+    return 0;
+}
+/////////////////////////////dont touch below////////////////////////////////////////////////
+int main(int argc, char **argv) {
+    if (argc != 3) {
+        cout << "Usage: " << argv[0] << "<word_a>" << "<word_b>" << endl;
+        return 0;
+    }
+
+    subsequence_driver(argc, argv);
+
+    return 0;
+}
+
+
+Name : Permute 
+
+void permute(string a, int l, int r) 
+{ 
+   // Base case 
+   if (l == r) 
+   cout<<a<<endl; 
+   else
+   { 
+   // Permutations made 
+      for (int i = l; i <= r; i++) 
+      { 
+      // Swapping done 
+      std::swap(a[l], a[i]); //exchanges elements 
+      
+      // Recursion called 
+      permute(a, l+1, r); 
+      
+      //backtrack 
+      std::swap(a[l], a[i]); //exchange elements 
+      } 
+   } 
+  
+} 
+
+void permute(const string & str) //helper function
+{
+return permute(str, 0, str.length());
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+NAME : number of islands
+class Solution {
+public:
+    void dfs(int i, int j, vector<vector<char>>& grid, int rows, int cols){
+        if(i < 0 || i >= rows || j < 0 || j >= cols || grid[i][j] == '0') return;
+        grid[i][j] = '0';
+        dfs(i - 1, j, grid, rows, cols);
+        dfs(i + 1, j, grid, rows, cols);
+        dfs(i, j - 1, grid, rows, cols);
+        dfs(i, j + 1, grid, rows, cols);
+    }
+    
+    int numIslands(vector<vector<char>>& grid) {
+        if(grid.size() == 0 || grid[0].size() == 0) return 0;
+        int rows = grid.size();
+        int cols = grid[0].size();
+        int cnt = 0;
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                if(grid[i][j] == '1'){
+                    dfs(i, j, grid, rows, cols);
+                    cnt++;
+                }
+            }
+        }
+        return cnt;
+    }
+};
+NAME : valid parenthesis
+
+Class solution
+{
+	public boolean isValid(String s)
+ 	{
+           stack<char> balance;
+           
+           for(int i=0;i<s.length();i++)
+           {
+           	       if(s[i]==’(’||s[i]==’[’||s[i]==’{’)
+                  {
+                  balance.push(s[i]);
+                  }
+                  else if(s[i]==’)’||!balance.empty()&&balance.top()==’(’)
+                  {
+                  balance.pop();
+                  }
+                  else if(s[i]==’]’||!balance.empty()&&balance.top()==’[’)
+                  {
+                  balance.pop();
+                  }
+                  else if(s[i]==’}’||!balance.empty()&&balance.top()==’{’)
+                  {
+                  balance.pop();
+                  }
+                 else
+                 {
+                 return false;
+                 }
+           }
+      return true;
+   }
+
+				Category: tree/binary search
+Name: convert sorted array into binary search tree
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return helper(nums,0,nums.size()-1);
+    }
+    TreeNode* helper(vector<int> &nums, int i, int j)
+    {
+        if(i>j)
+            return NULL;
+        int mid=i+(j-i)/2;
+        TreeNode* root=new TreeNode(nums[mid]);
+        root->left=helper(nums,i,mid-1);
+        root->right=helper(nums,mid+1,j);
+        return root;
+    }
+};
+
+				Category:queue
+Name: moving average from data steam
+Private:	
+	queue<int> q;
+	double sum;
+	Int maxsize;
+Public:
+	movingaverage(int size)
+            {
+            maxsize=size; 
+            sum=0.0;
+            }
+
+           Double next(int entry)
+           {
+           if(q.size==maxsize)
+           {
+           sum-=q.pop();
+           }
+           q.push(entry);
+           sum+=entry;
+
+           Return sum/q.size()
+           }
+
+
+
+       Category:  Trees
+					       Name : lowest common ancestor 
+class Solution
+ {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) 
+{
+if(p->val<root->val&&q->val<root->val)
+{
+return lowestCommonAncestor(root->left,p,q);
+}
+           else if(p->val>root->val&&q->val>root->val)
+{
+return lowestCommonAncestor(root->right,p,q);
+}
+           Else 
+	{
+           Return root;
+	}
+    }
+};
+
+
+
+	                                      Category: linked lists
+				   Name : reverse linked list
+class Solution
+ {
+ListNode* reverselist(ListNode* head)
+{
+ListNode* prev=nullptr;
+while(head!=nullptr)
+{
+ListNode* curr=head->next;
+head->next=prev;
+prev=head;
+head=curr;
+}
+Return prev;
+}
